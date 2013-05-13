@@ -142,6 +142,15 @@
     }
 }
 
+- (void)findEventByDate:(Date*)date {
+	for (Event *event in self.fetchedResultsController.fetchedObjects)
+	{
+		if (event.creationDate == date) {
+			// do something usefull
+		}
+	}
+}
+
 - (void)addEvent {
 	CLLocation *location = [self.locationManager location];
     if (!location) {
