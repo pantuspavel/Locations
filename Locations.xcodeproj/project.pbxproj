@@ -26,7 +26,12 @@
 		468861ED173D47490093019B /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 468861EC173D47490093019B /* CoreLocation.framework */; };
 		468861EF173D47510093019B /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 468861EE173D47510093019B /* CoreData.framework */; };
 		468861F2173D527E0093019B /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 468861F0173D527E0093019B /* Model.xcdatamodeld */; };
-		468861F5173D54800093019B /* Event.m in Sources */ = {isa = PBXBuildFile; fileRef = 468861F4173D547F0093019B /* Event.m */; };
+		468861FC1740E2430093019B /* UAccountID.m in Sources */ = {isa = PBXBuildFile; fileRef = 468861FB1740E2430093019B /* UAccountID.m */; };
+		468861FF1740E2B40093019B /* UFlakeID.m in Sources */ = {isa = PBXBuildFile; fileRef = 468861FE1740E2B30093019B /* UFlakeID.m */; };
+		468862021740E2EF0093019B /* UAccountType.m in Sources */ = {isa = PBXBuildFile; fileRef = 468862011740E2EE0093019B /* UAccountType.m */; };
+		468862051740E3370093019B /* TContactDetails.m in Sources */ = {isa = PBXBuildFile; fileRef = 468862041740E3350093019B /* TContactDetails.m */; };
+		468862081740E97B0093019B /* AbstractStruct.m in Sources */ = {isa = PBXBuildFile; fileRef = 468862071740E9790093019B /* AbstractStruct.m */; };
+		4688620B1740ECC90093019B /* TContact.m in Sources */ = {isa = PBXBuildFile; fileRef = 4688620A1740ECC60093019B /* TContact.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -65,8 +70,18 @@
 		468861EC173D47490093019B /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		468861EE173D47510093019B /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		468861F1173D527E0093019B /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
-		468861F3173D547F0093019B /* Event.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Event.h; sourceTree = "<group>"; };
-		468861F4173D547F0093019B /* Event.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Event.m; sourceTree = "<group>"; };
+		468861FA1740E2420093019B /* UAccountID.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UAccountID.h; sourceTree = "<group>"; };
+		468861FB1740E2430093019B /* UAccountID.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UAccountID.m; sourceTree = "<group>"; };
+		468861FD1740E2B20093019B /* UFlakeID.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UFlakeID.h; sourceTree = "<group>"; };
+		468861FE1740E2B30093019B /* UFlakeID.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UFlakeID.m; sourceTree = "<group>"; };
+		468862001740E2ED0093019B /* UAccountType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UAccountType.h; sourceTree = "<group>"; };
+		468862011740E2EE0093019B /* UAccountType.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UAccountType.m; sourceTree = "<group>"; };
+		468862031740E3330093019B /* TContactDetails.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TContactDetails.h; sourceTree = "<group>"; };
+		468862041740E3350093019B /* TContactDetails.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TContactDetails.m; sourceTree = "<group>"; };
+		468862061740E9780093019B /* AbstractStruct.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AbstractStruct.h; sourceTree = "<group>"; };
+		468862071740E9790093019B /* AbstractStruct.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AbstractStruct.m; sourceTree = "<group>"; };
+		468862091740ECC40093019B /* TContact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TContact.h; sourceTree = "<group>"; };
+		4688620A1740ECC60093019B /* TContact.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TContact.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -137,8 +152,18 @@
 				468861CC173D47260093019B /* ViewController.xib */,
 				468861B8173D47260093019B /* Supporting Files */,
 				468861F0173D527E0093019B /* Model.xcdatamodeld */,
-				468861F3173D547F0093019B /* Event.h */,
-				468861F4173D547F0093019B /* Event.m */,
+				468862091740ECC40093019B /* TContact.h */,
+				4688620A1740ECC60093019B /* TContact.m */,
+				468861FA1740E2420093019B /* UAccountID.h */,
+				468861FB1740E2430093019B /* UAccountID.m */,
+				468861FD1740E2B20093019B /* UFlakeID.h */,
+				468861FE1740E2B30093019B /* UFlakeID.m */,
+				468862001740E2ED0093019B /* UAccountType.h */,
+				468862011740E2EE0093019B /* UAccountType.m */,
+				468862031740E3330093019B /* TContactDetails.h */,
+				468862041740E3350093019B /* TContactDetails.m */,
+				468862061740E9780093019B /* AbstractStruct.h */,
+				468862071740E9790093019B /* AbstractStruct.m */,
 			);
 			path = Locations;
 			sourceTree = "<group>";
@@ -290,7 +315,12 @@
 				468861C2173D47260093019B /* AppDelegate.m in Sources */,
 				468861CB173D47260093019B /* ViewController.m in Sources */,
 				468861F2173D527E0093019B /* Model.xcdatamodeld in Sources */,
-				468861F5173D54800093019B /* Event.m in Sources */,
+				468861FC1740E2430093019B /* UAccountID.m in Sources */,
+				468861FF1740E2B40093019B /* UFlakeID.m in Sources */,
+				468862021740E2EF0093019B /* UAccountType.m in Sources */,
+				468862051740E3370093019B /* TContactDetails.m in Sources */,
+				468862081740E97B0093019B /* AbstractStruct.m in Sources */,
+				4688620B1740ECC90093019B /* TContact.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

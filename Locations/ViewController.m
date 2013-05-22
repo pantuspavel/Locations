@@ -7,7 +7,7 @@
 //
 
 #import "ViewController.h"
-#import "Event.h"
+#import "TContact.h"
 
 @interface ViewController ()
 
@@ -21,45 +21,43 @@
 {
 	[super viewDidLoad];
 	
-//	self.eventsArray = [[NSMutableArray alloc] init];
-	
-	self.locationManager = [[CLLocationManager alloc] init];
-    self.locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters;
-    self.locationManager.delegate = self;
-	
     // Set the title.
-    self.title = @"Locations";
+    self.title = @"TContacts";
 	
     // Set up the buttons.
     self.navigationItem.leftBarButtonItem = self.editButtonItem;
 	
     self.addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd
-															  target:self action:@selector(addEvent)];
-    self.addButton.enabled = NO;
-//    self.navigationItem.rightBarButtonItem = self.addButton;
-	
+															  target:self
+																   action:@selector(addContacts)];
+
 	self.editButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit
-																	target:self action:@selector(editSelectedItem)];
+																	target:self
+																	action:@selector(editAllItems)];
 	
-	self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects: self.addButton, self.editButton, nil];
+	self.changeOrderButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit
+																		   target:self
+																		   action:@selector(reorder)];
 	
-    // Start the location manager.
-    [[self locationManager] startUpdatingLocation];
+	self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects: self.addButton, self.editButton, self.changeOrderButton, nil];
+	
 	
 	NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
-    NSEntityDescription *entity = [NSEntityDescription entityForName:@"Event" inManagedObjectContext:self.managedObjectContext];
+    NSEntityDescription *entity = [NSEntityDescription entityForName:@"TContact" inManagedObjectContext:self.managedObjectContext];
     [fetchRequest setEntity:entity];
     
     // Create the sort descriptors array.
-	NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"creationDate" ascending:NO];
+	NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"details.lastEvent" ascending:NO];
     NSArray *sortDescriptors = [[NSArray alloc] initWithObjects:sortDescriptor, nil];
     [fetchRequest setSortDescriptors:sortDescriptors];
     
     // Create and initialize the fetch results controller.
-    self.fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:nil cacheName:@"Event"];
+    self.fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:nil cacheName:@"TContact"];
+	
     self.fetchedResultsController.delegate = self;
 	
 	NSError *error;
+	NSLog(@"Start fetching!");
     if (![self.fetchedResultsController performFetch:&error]) {
         NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
         abort();
@@ -67,8 +65,6 @@
 }
 
 - (void)viewDidUnload {
-//    self.eventsArray = nil;
-    self.locationManager = nil;
     self.addButton = nil;
 }
 
@@ -83,7 +79,7 @@
 }
 
 - (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type newIndexPath:(NSIndexPath *)newIndexPath
-{	
+{
     switch(type) {
             
         case NSFetchedResultsChangeInsert:
@@ -131,8 +127,8 @@
     if (editingStyle == UITableViewCellEditingStyleDelete) {
 		
         // Delete the managed object at the given index path.
-        NSManagedObject *eventToDelete = [self.fetchedResultsController objectAtIndexPath:indexPath];
-        [self.managedObjectContext deleteObject:eventToDelete];
+        NSManagedObject *contactToDelete = [self.fetchedResultsController objectAtIndexPath:indexPath];
+        [self.managedObjectContext deleteObject:contactToDelete];
 		
         // Commit the change.
         NSError *error = nil;
@@ -142,42 +138,80 @@
     }
 }
 
-- (void)findEventByDate:(Date*)date {
-	for (Event *event in self.fetchedResultsController.fetchedObjects)
-	{
-		if (event.creationDate == date) {
-			// do something usefull
-		}
+- (void)addContacts {
+	NSLog(@"add Contacts start!");
+	
+	for (int i = 0; i < 1000; i++) {
+		TContact *contact = (TContact *)[NSEntityDescription insertNewObjectForEntityForName:@"TContact" inManagedObjectContext:self.managedObjectContext];
+		
+		int randomId = arc4random() % 1000000;
+		UAccountID* accId = [[UAccountID alloc] initWithInt:randomId];
+		contact.identifier = accId;
+		
+		contact.name = [NSString stringWithFormat:@"%d", randomId];
+		contact.avatarId = [contact.name copy];
+		contact.email = [contact.name copy];
+		contact.organizationId = [contact.avatarId copy];
+		contact.accountType = [[UAccountType alloc] initWithString:@"normal"];
+		contact.lastModified = [NSDate date];
+		contact.isFavorite = [NSNumber numberWithBool:YES];
+		contact.details = [[TContactDetails alloc] init];
+		contact.details.pending = PendingConnect;
+		contact.details.lastEvent = randomId;
 	}
+	
+    NSLog(@"Saving Contacts start!");
+	NSError *error = nil;
+	if (![self.managedObjectContext save:&error]) {
+		NSAssert(0, @"Can't save!");
+	}
+    NSLog(@"Saving Contacts end!");
+	
+	NSLog(@"add Contacts finished!");
 }
 
-- (void)addEvent {
-	CLLocation *location = [self.locationManager location];
-    if (!location) {
-        return;
-    }
-
-	// Create and configure a new instance of the Event entity.
-	Event *event = (Event *)[NSEntityDescription insertNewObjectForEntityForName:@"Event" inManagedObjectContext:self.managedObjectContext];
+- (void)editAllItems {
+	NSLog(@"edit Contacts start!");
 	
-	CLLocationCoordinate2D coordinate = [location coordinate];
-	[event setLatitude:[NSNumber numberWithDouble:coordinate.latitude]];
-	[event setLongitude:[NSNumber numberWithDouble:coordinate.longitude]];
-	[event setCreationDate:[NSDate date]];
+	for (TContact *contact in self.fetchedResultsController.fetchedObjects)
+	{
+		int randomId = arc4random() % 1000000;
+		UAccountID* accId = [[UAccountID alloc] initWithInt:randomId];
+
+		contact.identifier = accId;
+		contact.name = [NSString stringWithFormat:@"%d", randomId];
+	}
 	
 	NSError *error = nil;
 	if (![self.managedObjectContext save:&error]) {
 		NSAssert(0, @"Can't save!");
 	}
+	
+	NSLog(@"edit Contacts finished!");
+}
+
+- (void)reorder {
+	NSLog(@"Reorder Contacts start!");
+	
+	NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"details.lastEvent" ascending:YES];
+    NSArray *sortDescriptors = [[NSArray alloc] initWithObjects:sortDescriptor, nil];
+	[self.fetchedResultsController.fetchRequest setSortDescriptors:sortDescriptors];
+	
+	NSError *error;
+    if (![self.fetchedResultsController performFetch:&error]) {
+        NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+        abort();
+    }
+	
+	[self.tableView reloadData];
+	
+	NSLog(@"Reorder Contacts finished!");
 }
 
 - (void)editSelectedItem {
 	NSIndexPath* selectedRow = [self.tableView indexPathForSelectedRow];
 	
-	Event* selectedEvent = (Event *)[self.fetchedResultsController objectAtIndexPath:selectedRow];
-	
-	selectedEvent.latitude = [NSNumber numberWithDouble:0.];
-	selectedEvent.longitude = [NSNumber numberWithDouble:0.];
+	TContact* contact = (TContact *)[self.fetchedResultsController objectAtIndexPath:selectedRow];
 	
 	NSError *error = nil;
 	if (![self.managedObjectContext save:&error]) {
@@ -197,21 +231,7 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	
-    // A date formatter for the time stamp.
-    static NSDateFormatter *dateFormatter = nil;
-    if (dateFormatter == nil) {
-        dateFormatter = [[NSDateFormatter alloc] init];
-        [dateFormatter setTimeStyle:NSDateFormatterMediumStyle];
-        [dateFormatter setDateStyle:NSDateFormatterMediumStyle];
-    }
-	
-    // A number formatter for the latitude and longitude.
-    static NSNumberFormatter *numberFormatter = nil;
-    if (numberFormatter == nil) {
-        numberFormatter = [[NSNumberFormatter alloc] init];
-        [numberFormatter setNumberStyle:NSNumberFormatterDecimalStyle];
-        [numberFormatter setMaximumFractionDigits:3];
-    }
+	static int counter = 0;
 	
     static NSString *CellIdentifier = @"Cell";
 	
@@ -221,27 +241,16 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
     }
 	
-    Event *event = (Event *)[self.fetchedResultsController objectAtIndexPath:indexPath];
+    TContact *contact = (TContact *)[self.fetchedResultsController objectAtIndexPath:indexPath];
 	
-    cell.textLabel.text = [dateFormatter stringFromDate:[event creationDate]];
+    cell.textLabel.text = contact.name;
+    cell.detailTextLabel.text = [NSString stringWithFormat:@"%lld", contact.details.lastEvent];
 	
-    NSString *string = [NSString stringWithFormat:@"%@, %@",
-						[numberFormatter stringFromNumber:[event latitude]],
-						[numberFormatter stringFromNumber:[event longitude]]];
-    cell.detailTextLabel.text = string;
+	if (counter++ == 9) {
+		NSLog(@"End updating ui!");
+	}
 	
     return cell;
-}
-
-- (void)locationManager:(CLLocationManager *)manager
-    didUpdateToLocation:(CLLocation *)newLocation
-           fromLocation:(CLLocation *)oldLocation {
-    self.addButton.enabled = YES;
-}
-
-- (void)locationManager:(CLLocationManager *)manager
-       didFailWithError:(NSError *)error {
-    self.addButton.enabled = NO;
 }
 
 - (void)controllerWillChangeContent:(NSFetchedResultsController *)controller

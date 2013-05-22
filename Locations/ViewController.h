@@ -10,13 +10,11 @@
 #import "CoreLocation/CoreLocation.h"
 #import "CoreData/NSFetchedResultsController.h"
 
-@interface ViewController : UITableViewController < CLLocationManagerDelegate,
-													NSFetchedResultsControllerDelegate >
+@interface ViewController : UITableViewController < NSFetchedResultsControllerDelegate >                                                                                                                                                                                                                                                                                                                                                               
 
-//@property (nonatomic, retain) NSMutableArray *eventsArray;
 @property (nonatomic, retain) NSManagedObjectContext *managedObjectContext;
-@property (nonatomic, retain) CLLocationManager *locationManager;
 @property (nonatomic, retain) UIBarButtonItem *addButton;
 @property (nonatomic, retain) UIBarButtonItem *editButton;
+@property (nonatomic, retain) UIBarButtonItem *changeOrderButton;
 
 @end
