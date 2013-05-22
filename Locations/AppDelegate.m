@@ -28,11 +28,25 @@
     						 [NSNumber numberWithBool:YES], NSMigratePersistentStoresAutomaticallyOption,
     						 [NSNumber numberWithBool:YES], NSInferMappingModelAutomaticallyOption, nil];
     self.persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel: self.managedObjectModel];
+    
+    // Test whether we have an existing incompatible database and delete it
+    if ( [[NSFileManager defaultManager] fileExistsAtPath: [storeUrl path]] ) {
+        NSDictionary *existingPersistentStoreMetadata = [NSPersistentStoreCoordinator metadataForPersistentStoreOfType: NSSQLiteStoreType URL: storeUrl error: &error];
+        if ( !existingPersistentStoreMetadata ) {
+             [NSException raise: NSInternalInconsistencyException format: @"Failed to read metadata for persistent store %@: %@", storeUrl, error];
+        }
+        
+        if ( ![self.managedObjectModel isConfiguration: nil compatibleWithStoreMetadata: existingPersistentStoreMetadata] ) {
+                NSLog(@"Incompatible database found. Deleting persistent store %@", storeUrl);
+            if ( ![[NSFileManager defaultManager] removeItemAtURL: storeUrl error: &error] )
+                NSLog(@"Could not delete persistent store %@", error);
+        }
+    }
+    
     if (![self.persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeUrl options:options error:&error]) {
         // Handle error
     }
-	
-	
+		
 	self.managedObjectContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
 	self.managedObjectContext.persistentStoreCoordinator = self.persistentStoreCoordinator;
 

@@ -31,11 +31,11 @@
 															  target:self
 																   action:@selector(addContacts)];
 
-	self.editButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit
+	self.editButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFastForward
 																	target:self
 																	action:@selector(editAllItems)];
 	
-	self.changeOrderButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit
+	self.changeOrderButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh
 																		   target:self
 																		   action:@selector(reorder)];
 	
@@ -179,7 +179,7 @@
 		UAccountID* accId = [[UAccountID alloc] initWithInt:randomId];
 
 		contact.identifier = accId;
-		contact.name = [NSString stringWithFormat:@"%d", randomId];
+		//contact.name = [NSString stringWithFormat:@"%d", randomId];
 	}
 	
 	NSError *error = nil;
